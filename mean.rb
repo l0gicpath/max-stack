@@ -12,11 +12,12 @@ class Mean < Max
 
   def pop
     value = super
-    @mean -= value
+    @mean -= value unless value.nil?
     value
   end
 
   def mean
+    return 0.0 unless @stack.size > 0
     @mean.to_f / @stack.size
   end
 end

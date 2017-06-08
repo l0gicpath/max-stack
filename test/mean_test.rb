@@ -17,6 +17,7 @@ class MeanTest < Test::Unit::TestCase
   def test_return_nil_on_empty_stack
     mean = Mean.new
     assert_nil mean.pop
+    assert_equal mean.mean, 0.0
   end
 
   def test_pop
@@ -34,6 +35,7 @@ class MeanTest < Test::Unit::TestCase
     assert_equal mean.pop, 5
     assert_equal mean.pop, 3
     assert_nil mean.pop
+    assert_equal mean.mean, 0.0
   end
 
   def test_push_alias
