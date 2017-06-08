@@ -1,0 +1,61 @@
+#!/usr/bin/env ruby
+# Benchmarking the implementations of Max
+# One uses a naive #max implementation
+# Another one uses a double stack
+#
+# usage:
+# bin/benchmark
+
+$:.unshift '.' # Because F*** ruby 1.9
+require 'benchmark'
+require 'benchmark/ips'
+require 'max'
+
+class MaxNaive
+  attr_reader :stack
+
+  def initialize
+    @stack = []
+  end
+
+  def push(value)
+    @stack << value
+  end
+
+  def pop
+    @stack.pop
+  end
+
+  def max
+    highest_value_index = 0
+    highest_value = @stack[highest_value_index]
+    loop do  
+      highest_value_index += 1
+      break if highest_value_index >= @stack.size
+      next_value = @stack[highest_value_index]
+      highest_value = highest_value > next_value ? highest_value : next_value
+    end
+
+    highest_value
+  end
+end
+
+naive = MaxNaive.new
+real  = Max.new
+
+10_000_000.times do |_|
+  naive.push rand(1 .. 500_000)
+  real.push rand(1 .. 500_000)
+end
+
+Benchmark.ips do |x|
+  x.report("naive") { naive.max }
+  x.report("real")  { real.max  }
+  x.compare!
+end
+
+Benchmark.bm do |x|
+  x.report(:naive) { naive.max }
+  x.report(:real)  { real.max  }
+end
+
